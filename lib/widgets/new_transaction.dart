@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './adaptiveButton.dart';
 import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -53,64 +57,62 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Title',
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 10,
+            top: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            right: 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                ),
+                controller: _titleController,
+                onSubmitted: (_) => _submitData(),
+                // onChanged: (value) {
+                //   titleInput = value;
+                // },
               ),
-              controller: _titleController,
-              onSubmitted: (_) => _submitData(),
-              // onChanged: (value) {
-              //   titleInput = value;
-              // },
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Amount',
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                ),
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                // keyboardType: TextInputType.number,
+                // onChanged: (value) => amountInput = value,
+                onSubmitted: (_) => _submitData(),
               ),
-              controller: _amountController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              // keyboardType: TextInputType.number,
-              // onChanged: (value) => amountInput = value,
-              onSubmitted: (_) => _submitData(),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(_selectedDate == null
-                        ? 'No date chosen!'
-                        : 'Picket date: ${DateFormat.yMd().format(_selectedDate as DateTime)}'),
-                  ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      'Choose date',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+              Container(
+                height: 70,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(_selectedDate == null
+                          ? 'No date chosen!'
+                          : 'Picket date: ${DateFormat.yMd().format(_selectedDate as DateTime)}'),
                     ),
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
+                    AdaptiveButton('Choose date!', _presentDatePicker)
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () => _submitData(),
-              child: const Text('Add Transaction'),
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColor,
-                onPrimary: Theme.of(context).textTheme.button?.color,
-              ),
-            )
-          ],
+              ElevatedButton(
+                onPressed: () => _submitData(),
+                child: const Text('Add Transaction'),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Theme.of(context).textTheme.button?.color,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
